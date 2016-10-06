@@ -79,69 +79,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
     /**
      * Generation of the special path
      */
-    var step2 = function() {
-        var edges = [];
-
-        for(var t = T - 1; t >= 0; t--) {
-        for(var x = X - 1; x >= 0; x--) {
-        for(var y = Y - 1; y >= 0; y--) {
-            for(var k = 0; k < 6; k++) {
-                var dt = t + delta[0][k];
-                var dx = x + delta[1][k];
-                var dy = y + delta[2][k];
-
-                if(!valid(dt, 0, T)) continue;
-                if(!valid(dx, 0, X)) continue;
-                if(!valid(dy, 0, Y)) continue;
-
-                edges.push({
-                    u: dimToNode( t,  x,  y),
-                    v: dimToNode(dt, dx, dy)
-                });
-            }
-        } } }
-
-        shuffle(edges);
-
-        var ds = new BOLADO.DisjointSet(T * X * Y);
-
-        ds.makeset();
-
-        for(var i = S - 1; i >= 0; i--) {
-            var p = specialPoints[i];
-            var u = dimToNode(p.t, p.x, p.y);
-
-            ds.inc(u);
-        }
-
-        var base;
-        for(var i = edges.length - 1; i >= 0; i--) {
-            var u = edges[i].u;
-            var v = edges[i].v;
-
-            if(ds.sameset(u, v)) continue;
-
-            ds.union(u, v);
-
-            base = u;
-            if(ds.size(u) == S) break;
-        }
-
-
-        for(var t = T - 1; t >= 0; t--) {
-        for(var x = X - 1; x >= 0; x--) {
-        for(var y = Y - 1; y >= 0; y--) {
-            if(ds.sameset(base, dimToNode(t, x, y))) {
-                maze[t][x][y] = 0.5;
-            }
-        } } }
-        
-        for(var i = S - 1; i >= 0; i--) {
-            maze[specialPoints[i].t]
-                [specialPoints[i].x]
-                [specialPoints[i].y] = 1;
-        }
-    };
 
     var getPath = function(t, x, y) {
         var q = [];
