@@ -173,14 +173,28 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
         }
     }
 
+    /**
+     * Generation of a 2D maze for a specific value of T (near the middle)
+     */
+    var A = null; /* Outside the function for debugging reasons */
+    var step3 = function() {
+        A = new BOLADO.automata();
+        A.init();
+        for(var i = 0; i < 100; i++) {
+            A.iterate();
+        }
+    }
+
     var generate = function() {
         initMaze();
         step1();
         step2();
+        step3();
     };
 
     var plot = function() {
-        BOLADO.plot(maze);
+        //BOLADO.plot(maze);
+        A.plot();
     };
 
     return {
