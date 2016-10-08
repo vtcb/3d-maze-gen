@@ -79,7 +79,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
     /**
      * Generation of the special path
      */
-
     var getPath = function(t, x, y) {
         var q = [];
         var initial = {t: t, x: x, y: y};
@@ -160,16 +159,10 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
             );
         }
 
-        for(var t = T - 1; t >= 0; t--) {
-        for(var x = X - 1; x >= 0; x--) {
-        for(var y = Y - 1; y >= 0; y--) {
-            maze[t][x][y] /= 2;
-        } } }
-        
         for(var i = specialPoints.length - 1; i >= 0; i--) {
             maze[specialPoints[i].t]
                 [specialPoints[i].x]
-                [specialPoints[i].y] = 1;
+                [specialPoints[i].y] = 2;
         }
     }
 
