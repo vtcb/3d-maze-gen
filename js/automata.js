@@ -1,5 +1,11 @@
 var BOLADO = BOLADO || {};
 
+/**
+ * Cellular Automata
+ *
+ * Creates a 2D map of dimensions [X, Y] of cellular automata
+ * Return a iterable version of
+ */
 BOLADO.automata = function(X, Y, A) {
     var X = X || 10;
     var Y = Y || 10;
@@ -25,6 +31,8 @@ BOLADO.automata = function(X, Y, A) {
             var x = Math.floor( Math.random() * X );
             var y = Math.floor( Math.random() * Y );
 
+            if(A[x][y] === 2) continue;
+
             A[x][y] = 1;
         }
     };
@@ -41,8 +49,8 @@ BOLADO.automata = function(X, Y, A) {
             alive += A[dx][dy];
         }
 
-        if(A[x][y] == 0) {
-            return alive == 3 ? 1 : 0;
+        if(A[x][y] === 0) {
+            return alive === 3 ? 1 : 0;
         } else {
             return alive >= 1 && alive <= 5 ? 1 : 0;
         }

@@ -95,9 +95,9 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
             var y = q[0].y;
             var P = q.shift();
 
-            if(maze[t][x][y] == 1) {
+            if(maze[t][x][y] === 1) {
                 var eq = function(a, b) {
-                    return a.t == b.t && a.x == b.x && a.y == b.y;
+                    return a.t === b.t && a.x === b.x && a.y === b.y;
                 }
 
                 while(!eq(P, initial)) {
@@ -122,7 +122,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
                 if(!valid(dx, 0, X)) continue;
                 if(!valid(dy, 0, Y)) continue;
 
-                if(mark[dt][dx][dy] == step) continue;
+                if(mark[dt][dx][dy] === step) continue;
                 mark[dt][dx][dy] = step;
                 dist[dt][dx][dy] = dist[t][x][y] + 1;
                 best[dt][dx][dy] = P;
@@ -193,7 +193,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
     };
 
     var plot = function() {
-        //BOLADO.plot(maze);
+        BOLADO.plot(maze);
         A.plot();
     };
 

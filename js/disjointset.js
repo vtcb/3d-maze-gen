@@ -9,7 +9,7 @@ BOLADO.DisjointSet = function(size) {
     var ds, sz;
 
     var find = function(u) {
-        return ds[u] == u ? u : ds[u] = find(ds[u]);
+        return ds[u] === u ? u : ds[u] = find(ds[u]);
     };
 
     return {
@@ -37,7 +37,7 @@ BOLADO.DisjointSet = function(size) {
             u = find(u);
             v = find(v);
 
-            if(u == v) return false;
+            if(u === v) return false;
 
             sz[v] += sz[u];
             ds[u] = v;
@@ -46,7 +46,7 @@ BOLADO.DisjointSet = function(size) {
         },
 
         sameset : function(u, v) {
-            return find(u) == find(v);
+            return find(u) === find(v);
         }
     }
 };
