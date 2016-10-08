@@ -178,7 +178,14 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
      */
     var A = null; /* Outside the function for debugging reasons */
     var step3 = function() {
-        A = new BOLADO.automata();
+        var specialMap = createArray(X, Y);
+
+        for(var x = X - 1; x >= 0; x--) {
+        for(var y = Y - 1; y >= 0; y--) {
+            specialMap[x][y] = maze[T / 2][x][y] > 0 ? 2 : 0;
+        } }
+
+        A = new BOLADO.automata(X, Y, specialMap);
         A.init();
         for(var i = 0; i < 100; i++) {
             A.iterate();

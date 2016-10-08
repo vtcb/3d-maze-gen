@@ -4,7 +4,10 @@ var BOLADO = BOLADO || {};
  * Cellular Automata
  *
  * Creates a 2D map of dimensions [X, Y] of cellular automata
- * Return a iterable version of
+ * The automata are specifically for 2D maze generation
+ *   0 -> Empty
+ *   1 -> Full
+ *   2 -> Reserved (Mandatory Empty)
  */
 BOLADO.automata = function(X, Y, A) {
     var X = X || 10;
@@ -46,13 +49,15 @@ BOLADO.automata = function(X, Y, A) {
             if(!valid(dx, 0, X)) continue;
             if(!valid(dy, 0, Y)) continue;
 
-            alive += A[dx][dy];
+            alive += A[dx][dy] === 1 ? 1 : 0;
         }
 
         if(A[x][y] === 0) {
             return alive === 3 ? 1 : 0;
-        } else {
+        } else if(A[x][y] === 1) {
             return alive >= 1 && alive <= 5 ? 1 : 0;
+        } else {
+            return 2;
         }
     };
 
