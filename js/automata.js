@@ -29,12 +29,10 @@ BOLADO.automata = function(X, Y, A) {
 
     var B = createArray(X, Y);
 
-    var init = function() {
-        for(var i = 0; i < 20; i++) {
+    var generateSeed = function() {
+        for(var i = 0; i < X * Y / 2; i++) {
             var x = Math.floor( Math.random() * X );
             var y = Math.floor( Math.random() * Y );
-
-            if(A[x][y] === 2) continue;
 
             A[x][y] = 1;
         }
@@ -52,12 +50,10 @@ BOLADO.automata = function(X, Y, A) {
             alive += A[dx][dy] === 1 ? 1 : 0;
         }
 
-        if(A[x][y] === 0) {
-            return alive === 3 ? 1 : 0;
-        } else if(A[x][y] === 1) {
+        if(A[x][y] === 1) {
             return alive >= 1 && alive <= 5 ? 1 : 0;
         } else {
-            return 2;
+            return alive === 3 ? 1 : 0;
         }
     };
 
@@ -75,18 +71,20 @@ BOLADO.automata = function(X, Y, A) {
     };
 
     var plot = function() {
+        BOLADO.plot2D(A);
+        /*
         for(var x = X - 1; x >= 0; x--) {
             var str = '' + ( (X - x)&1 ) + ": ";
             for(var y = Y - 1; y >= 0; y--) {
                 str += A[x][y];
             }
             console.log(str);
-        }
+        }*/
     }
 
     return {
-        init    : init,
-        iterate : iterate,
-        plot    : plot
+        generateSeed : generateSeed,
+        iterate      : iterate,
+        plot         : plot
     };
 };

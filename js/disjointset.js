@@ -1,12 +1,11 @@
-var BOLADO = BOLADO || {}
+var BOLADO = BOLADO || {};
 
 /**
  * Disjoint Set
  */
 
 BOLADO.DisjointSet = function(size) {
-
-    var ds, sz;
+    var ds, sz, ra;
 
     var find = function(u) {
         return ds[u] === u ? u : ds[u] = find(ds[u]);
@@ -25,9 +24,11 @@ BOLADO.DisjointSet = function(size) {
         makeset : function() {
             ds = [];
             sz = [];
+            ra = [];
             for(var i = 0; i < size; i++) {
                 ds.push(i);
                 sz.push(0);
+                ra.push(0);
             }
         },
 
@@ -39,6 +40,11 @@ BOLADO.DisjointSet = function(size) {
 
             if(u === v) return false;
 
+            if(ra[u] > ra[v]) {
+                var t = u; u = v; v = t;
+            }
+
+            ra[v] += ra[v] === ra[u] ? 1 : 0;
             sz[v] += sz[u];
             ds[u] = v;
 

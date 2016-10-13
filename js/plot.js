@@ -1,6 +1,6 @@
 var BOLADO = BOLADO || {};
 
-BOLADO.plot = function(input) {
+BOLADO.plot3D = function(input) {
     var data = new vis.DataSet();
 
     
@@ -49,4 +49,40 @@ BOLADO.plot = function(input) {
     // create our graph
     var container = document.getElementById('mygraph');
     var graph = new vis.Graph3d(container, data, options);
-}
+};
+
+BOLADO.plot2D = function(input) {
+    var data = new vis.DataSet();
+
+    
+    for(var i = input.length - 1; i >= 0; i--) {
+        for(var j = input[i].length - 1; j >= 0; j--) {
+            data.add({
+                x: i,
+                y: j,
+                z: 0,
+                style: input[i][j]
+            });
+        }
+    }
+
+    var options = {
+        width:  '600px',
+        height: '600px',
+        style: 'dot-color',
+        showPerspective: true,
+        showGrid: true,
+        keepAspectRatio: true,
+        verticalRatio: 1.0,
+        legendLabel: 'distance',
+        cameraPosition: {
+          horizontal: -0.35,
+          vertical: 0.22,
+          distance: 1.8
+        }
+    };
+
+    // create our graph
+    var container = document.getElementById('mygraph');
+    var graph = new vis.Graph3d(container, data, options);
+};

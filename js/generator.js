@@ -1,4 +1,4 @@
-var BOLADO = BOLADO || {}
+var BOLADO = BOLADO || {};
 
 /**
  * Maze Generator
@@ -19,7 +19,6 @@ var BOLADO = BOLADO || {}
  *  6. Scattering of the objectives along the maze
  *      - Autonomous agent (?)
  */
-
 BOLADO.MazeGenerator = function(T, X, Y, O, S) {
     var T = T || 10;
     var X = X || 10;
@@ -179,10 +178,13 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
         } }
 
         A = new BOLADO.automata(X, Y, specialMap);
-        A.init();
-        for(var i = 0; i < 100; i++) {
+        A.generateSeed();
+        for(var i = 0; i < 3 * Math.max(X, Y); i++) {
             A.iterate();
         }
+
+        // DEBUG
+        BOLADO.A = A;
     }
 
     var generate = function() {
@@ -193,7 +195,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
     };
 
     var plot = function() {
-        BOLADO.plot(maze);
+        //BOLADO.plot3D(maze);
         A.plot();
     };
 
