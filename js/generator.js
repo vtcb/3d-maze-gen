@@ -69,9 +69,9 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
 
         for(var i = S - 1; i >= 0; i--) {
             specialPoints.push({
-                t: Math.floor(Math.random() * T),
-                x: Math.floor(Math.random() * X),
-                y: Math.floor(Math.random() * Y)
+                t: randomInt(T),
+                x: randomInt(X),
+                y: randomInt(Y)
             });
 
         }
@@ -197,10 +197,17 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
         BOLADO.A = A;
     }
 
-    var limit = null;
     var step4 = function() {
         /* Special Path limitations */
-        limit = createArray(T, X, Y);
+        var limitF = createArray(T, X, Y);
+        var limitB = createArray(T, X, Y);
+
+        /* Growth Control
+         *  0 -> not
+         * -1 -> down
+         *  1 -> up
+         */
+        var growth = createArray(T, X, Y);
 
         for(var x = X - 1; x >= 0; x--) {
         for(var y = Y - 1; y >= 0; y--) {
@@ -211,10 +218,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
                     last = t;
                 }
 
-                limit[t][x][y] = Math.min(
-                    T * 1.5,
-                    last - t
-                );
+                limitF[t][x][y] = last - t;
             }
 
             var last = -3 * T;
@@ -224,16 +228,34 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
                     last = t;
                 }
 
-                limit[t][x][y] = Math.min(
-                    limit[t][x][y],
-                    t - last
-                );
+                limitB[t][x][y] = t - last;
             }
         } }
 
         for(var x = X - 1; x >= 0; x--) {
         for(var y = Y - 1; y >= 0; y--) {
-            maze[T / 2][x][y] = Math.floor( Math.random() * Math.min(D + 1, limit[T / 2][x][y]) ) / D;
+            maze[T / 2][x][y] = randomInt( Math.min(D + 1, Math.min(limitF[T / 2][x][y], limitB[T / 2][x][y])) ) / D;
+
+            var possible_growth = [];
+
+            if(maze[T / 2][x][y] === 0 && maze[T / 2][x][y] === 1) {
+                possible_growth.push( 0);
+            }
+
+            if(maze[T / 2][x][y] !== 1 && limitF[T / 2][x][y] >= 2 * D) {
+                possible_growth.push( 1);
+            }
+
+            if(maze[T / 2][x][y] !== 0 && limitB[T / 2][x][y] >= 2 * D) {
+                possible_growth.push(-1);
+            }
+
+            if(possible_growth.length === 0) {
+                maze[T / 2][x][y] = 0;
+                possible_growth.push(0);
+            }
+
+            growth[T / 2][x][y] = possible_growth[ randomInt( possible_growth.length ) ];
         } }
 
 

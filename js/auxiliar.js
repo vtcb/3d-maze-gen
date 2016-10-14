@@ -26,3 +26,8 @@ function shuffle(arr) {
         arr[j] = tmp;
     }
 }
+
+/* Generates a random integer in range [0, x) */
+function randomInt(x) {
+    return Math.floor( Math.random() * x );
+}
