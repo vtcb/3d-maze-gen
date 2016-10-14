@@ -1,6 +1,6 @@
 var BOLADO = BOLADO || {};
 
-BOLADO.plot3D = function(input) {
+var plot1 = function(input) {
     var data = new vis.DataSet();
 
     
@@ -11,7 +11,7 @@ BOLADO.plot3D = function(input) {
                     x: i,
                     y: j,
                     z: k,
-                    style: input[i][j][k]
+                    style: -input[k][i][j]
                 });
             }
         }
@@ -33,6 +33,45 @@ BOLADO.plot3D = function(input) {
     var options = {
         width:  '600px',
         height: '600px',
+        style: 'dot-size',
+        showPerspective: true,
+        showGrid: true,
+        keepAspectRatio: true,
+        verticalRatio: 1.0,
+        legendLabel: 'distance',
+        cameraPosition: {
+          horizontal: -0.35,
+          vertical: 0.22,
+          distance: 1.8
+        },
+        dotSizeRatio: 0.009
+    };
+
+    // create our graph
+    var container = document.getElementById('graph1');
+    var graph = new vis.Graph3d(container, data, options);
+};
+
+var plot2 = function(input) {
+    var data = new vis.DataSet();
+
+    
+    for(var k = input.length - 1; k >= 0; k--) {
+        for(var i = input[k].length - 1; i >= 0; i--) {
+            for(var j = input[k][i].length - 1; j >= 0; j--) {
+                data.add({
+                    x: i,
+                    y: j,
+                    z: k,
+                    style: -input[k][i][j]
+                });
+            }
+        }
+    }
+
+    var options = {
+        width:  '600px',
+        height: '600px',
         style: 'dot-color',
         showPerspective: true,
         showGrid: true,
@@ -43,12 +82,18 @@ BOLADO.plot3D = function(input) {
           horizontal: -0.35,
           vertical: 0.22,
           distance: 1.8
-        }
+        },
+        dotSizeRatio: 0.009
     };
 
     // create our graph
-    var container = document.getElementById('mygraph');
+    var container = document.getElementById('graph2');
     var graph = new vis.Graph3d(container, data, options);
+};
+
+BOLADO.plot3D = function(A, B) {
+    plot1(A);
+    plot2(B);
 };
 
 BOLADO.plot2D = function(input) {
@@ -79,7 +124,8 @@ BOLADO.plot2D = function(input) {
           horizontal: -0.35,
           vertical: 0.22,
           distance: 1.8
-        }
+        },
+        dotSizeRatio: 0.0001
     };
 
     // create our graph

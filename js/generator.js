@@ -6,24 +6,26 @@ var BOLADO = BOLADO || {};
  * Generates a 3D maze with dimensions [T, X, Y] with O objectives
  * Each cell of the maze is a value in [0, 1] representing the density of a cell
  * The maze contains a special path between S special points, which are randomly generated
+ * D ====> Discretization of Wall Growth!! TODO
  *
  * The algorithm is composed of six steps
  *  1. Generation of S random 3D points
  *  2. Generation of the special path
  *      - Random best path (using BFS)
  *  3. Generation of a 2D maze for a specific value of T (near the middle)
- *      - Celular automata
+ *      - Cellular automata
  *  4. Generation of a 3D maze from the 2D maze slice obtained in step 3 respecting the special path obtained in step 2
  *      - A cell knows in how much time it must be empty
  *  5. Definition of the player starting point
  *  6. Scattering of the objectives along the maze
  *      - Autonomous agent (?)
  */
-BOLADO.MazeGenerator = function(T, X, Y, O, S) {
-    var T = T || 10;
-    var X = X || 10;
-    var Y = Y || 10;
-    var O = O ||  2;
+BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
+    var T = T || 20;
+    var X = X || 20;
+    var Y = Y || 20;
+    var O = O ||  4;
+    var D = D ||  5; /* 0 a 100 */
 
     var S = S || (2 * O);
 
@@ -158,6 +160,14 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
             );
         }
 
+        for(var t = T - 1; t >= 0; t--) {
+        for(var x = X - 1; x >= 0; x--) {
+        for(var y = Y - 1; y >= 0; y--) {
+            maze[t][x][y] = 1 - maze[t][x][y];
+        } } }
+
+
+        if(false)
         for(var i = specialPoints.length - 1; i >= 0; i--) {
             maze[specialPoints[i].t]
                 [specialPoints[i].x]
@@ -179,7 +189,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
 
         A = new BOLADO.automata(X, Y, specialMap);
         A.generateSeed();
-        for(var i = 0; i < 3 * Math.max(X, Y); i++) {
+        for(var i = 3 * Math.max(X, Y) - 1; i >= 0; i--) {
             A.iterate();
         }
 
@@ -187,16 +197,71 @@ BOLADO.MazeGenerator = function(T, X, Y, O, S) {
         BOLADO.A = A;
     }
 
+    var limit = null;
+    var step4 = function() {
+        /* Special Path limitations */
+        limitF = createArray(T, X, Y);
+        limitB = createArray(T, X, Y);
+        limit = createArray(T, X, Y);
+
+        for(var x = X - 1; x >= 0; x--) {
+        for(var y = Y - 1; y >= 0; y--) {
+            var last = 3 * T;
+
+            for(var t = T - 1; t >= 0; t--) {
+                if(maze[t][x][y] === 0) {
+                    last = t;
+                }
+
+                limitF[t][x][y] = Math.min(
+                    T * 1.5,
+                    last - t
+                );
+
+                limit[t][x][y] = Math.min(
+                    T * 1.5,
+                    last - t
+                );
+            }
+
+            var last = -3 * T;
+
+            for(var t = 0; t < T; t++) {
+                if(maze[t][x][y] === 0) {
+                    last = t;
+                }
+
+                limitB[t][x][y] = Math.min(
+                    T * 1.5,
+                    t - last
+                );
+
+                limit[t][x][y] = Math.min(
+                    limit[t][x][y],
+                    t - last
+                );
+            }
+        } }
+
+        for(var x = X - 1; x >= 0; x--) {
+        for(var y = Y - 1; y >= 0; y--) {
+            maze[T / 2][x][y] = Math.floor( Math.random() * Math.min(D + 1, limit[T / 2][x][y]) ) / D;
+        } }
+
+
+    };
+
     var generate = function() {
         initMaze();
         step1();
         step2();
         step3();
+        step4();
     };
 
     var plot = function() {
-        //BOLADO.plot3D(maze);
-        A.plot();
+        BOLADO.plot3D(maze, limit);
+        //A.plot();
     };
 
     return {
