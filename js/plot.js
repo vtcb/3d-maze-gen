@@ -93,7 +93,7 @@ var plot2 = function(input) {
 
 BOLADO.plot3D = function(A, B) {
     plot1(A);
-    //plot2(B);
+    plot2(B);
 };
 
 BOLADO.plot2D = function(input) {

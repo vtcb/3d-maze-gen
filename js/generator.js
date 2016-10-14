@@ -200,7 +200,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
 
     var step4 = function() {
         /* Special Path limitations */
-        var limitF = createArray(T, X, Y);
+        limitF = createArray(T, X, Y);
         var limitB = createArray(T, X, Y);
 
         /* Growth Control
@@ -290,7 +290,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
     };
 
     var plot = function() {
-        BOLADO.plot3D(maze);
+        BOLADO.plot3D(maze, limitF);
         //A.plot();
     };
 
