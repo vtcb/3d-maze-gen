@@ -200,8 +200,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
     var limit = null;
     var step4 = function() {
         /* Special Path limitations */
-        limitF = createArray(T, X, Y);
-        limitB = createArray(T, X, Y);
         limit = createArray(T, X, Y);
 
         for(var x = X - 1; x >= 0; x--) {
@@ -212,11 +210,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
                 if(maze[t][x][y] === 0) {
                     last = t;
                 }
-
-                limitF[t][x][y] = Math.min(
-                    T * 1.5,
-                    last - t
-                );
 
                 limit[t][x][y] = Math.min(
                     T * 1.5,
@@ -230,11 +223,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
                 if(maze[t][x][y] === 0) {
                     last = t;
                 }
-
-                limitB[t][x][y] = Math.min(
-                    T * 1.5,
-                    t - last
-                );
 
                 limit[t][x][y] = Math.min(
                     limit[t][x][y],
@@ -260,7 +248,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
     };
 
     var plot = function() {
-        BOLADO.plot3D(maze, limit);
+        BOLADO.plot3D(maze);
         //A.plot();
     };
 
