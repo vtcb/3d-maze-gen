@@ -7,6 +7,7 @@ var BOLADO = BOLADO || {};
  * Each cell of the maze is a value in [0, 1] representing the density of a cell
  * The maze contains a special path between S special points, which are randomly generated
  * D ====> Discretization of Wall Growth!! TODO
+ * Z ====> Don't change probability!!
  *
  * The algorithm is composed of six steps
  *  1. Generation of S random 3D points
@@ -20,13 +21,13 @@ var BOLADO = BOLADO || {};
  *  6. Scattering of the objectives along the maze
  *      - Autonomous agent (?)
  */
-BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
+BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
     var T = T || 20;
     var X = X || 20;
     var Y = Y || 20;
     var O = O ||  4;
     var D = D ||  5; /* 0 a 100 */
-
+    var Z = Z ||  0.7;
     var S = S || (2 * O);
 
     var maze;
@@ -239,23 +240,42 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, S) {
             var possible_growth = [];
 
             if(maze[T / 2][x][y] === 0 && maze[T / 2][x][y] === 1) {
-                possible_growth.push( 0);
+                possible_growth.push( {g:  0, p: Z} );
             }
 
             if(maze[T / 2][x][y] !== 1 && limitF[T / 2][x][y] >= 2 * D) {
-                possible_growth.push( 1);
+                possible_growth.push( {g:  1, p: (1 - Z) / 2} );
             }
 
             if(maze[T / 2][x][y] !== 0 && limitB[T / 2][x][y] >= 2 * D) {
-                possible_growth.push(-1);
+                possible_growth.push( {g: -1, p: (1 - Z) / 2} );
             }
 
             if(possible_growth.length === 0) {
                 maze[T / 2][x][y] = 0;
-                possible_growth.push(0);
+                possible_growth.push( {g:  1, p: 1} );
             }
 
-            growth[T / 2][x][y] = possible_growth[ randomInt( possible_growth.length ) ];
+            for(var i = 1; i < possible_growth.length; i++) {
+                possible_growth[i].p += possible_growth[i - 1].p;
+            }
+
+            for(var i = 0; i < possible_growth.length; i++) {
+                possible_growth[i].p /= possible_growth[possible_growth.length - 1].p;
+            }
+
+            var P = Math.random();
+
+            for(var i = 0; i < possible_growth.length; i++) {
+                if(P < possible_growth[i].p) {
+                    growth[T / 2][x][y] = possible_growth[i].g;
+                    break;
+                }
+            }
+
+            if(!growth[T / 2][x][y]) {
+                growth[T / 2][x][y] = possible_growth[possible_growth.length - 1].g;
+            }
         } }
 
 
