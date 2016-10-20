@@ -15,10 +15,11 @@ var BOLADO = BOLADO || {};
  *      - Random best path (using BFS)
  *  3. Generation of a 2D maze for a specific value of T (near the middle)
  *      - Cellular automata
- *  4. Generation of a 3D maze from the 2D maze slice obtained in step 3 respecting the special path obtained in step 2
+ *  4. Generation of the 2D slice density, based on the automata
+ *  5. Generation of a 3D maze from the 2D maze slice obtained in step 4 respecting the special path obtained in step 2
  *      - A cell knows in how much time it must be empty
- *  5. Definition of the player starting point
- *  6. Scattering of the objectives along the maze
+ *  6. Definition of the player starting point
+ *  7. Scattering of the objectives along the maze
  *      - Autonomous agent (?)
  */
 BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
@@ -42,6 +43,13 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
         [ 0,  0,  0,  0, -1,  1],
         [-1,  1,  0,  0,  0,  0]
     ];
+
+    /* Cellular Automata */
+    var A = null;
+
+    /* Density Limit */
+    var limitF = null;
+    var limitB = null;
 
     /**
      * Create an empty 3D maze
@@ -179,7 +187,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
     /**
      * Generation of a 2D maze for a specific value of T (near the middle)
      */
-    var A = null; /* Outside the function for debugging reasons */
     var step3 = function() {
         var specialMap = createArray(X, Y);
 
@@ -193,15 +200,15 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
         for(var i = 3 * Math.max(X, Y) - 1; i >= 0; i--) {
             A.iterate();
         }
-
-        // DEBUG
-        BOLADO.A = A;
     }
 
+    /**
+     * Generation of the 2D slice density, based on the automata
+     */
     var step4 = function() {
         /* Special Path limitations */
         limitF = createArray(T, X, Y);
-        var limitB = createArray(T, X, Y);
+        limitB = createArray(T, X, Y);
 
         /* Growth Control
          *  0 -> not
@@ -281,8 +288,6 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
                 growth[T / 2][x][y] = possible_growth[possible_growth.length - 1].g;
             }
         } }
-
-
     };
 
     var generate = function() {
