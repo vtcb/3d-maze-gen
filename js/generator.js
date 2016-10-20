@@ -243,7 +243,7 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
 
             var possible_growth = [];
 
-            if(maze[T / 2][x][y] === 0 && maze[T / 2][x][y] === 1) {
+            if(maze[T / 2][x][y] === 0 || maze[T / 2][x][y] === 1) {
                 possible_growth.push( {g:  0, p: Z} );
             }
 
