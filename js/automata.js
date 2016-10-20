@@ -71,20 +71,25 @@ BOLADO.automata = function(X, Y, A) {
     };
 
     var plot = function() {
-        BOLADO.plot2D(A);
-        /*
+        //BOLADO.plot2D(A);
+
         for(var x = X - 1; x >= 0; x--) {
             var str = '' + ( (X - x)&1 ) + ": ";
             for(var y = Y - 1; y >= 0; y--) {
                 str += A[x][y];
             }
             console.log(str);
-        }*/
+        }
+    };
+
+    var get = function(x, y) {
+        return A[x][y];
     }
 
     return {
         generateSeed : generateSeed,
         iterate      : iterate,
-        plot         : plot
+        plot         : plot,
+        get          : get
     };
 };

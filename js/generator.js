@@ -235,7 +235,11 @@ BOLADO.MazeGenerator = function(T, X, Y, O, D, Z, S) {
 
         for(var x = X - 1; x >= 0; x--) {
         for(var y = Y - 1; y >= 0; y--) {
-            maze[T / 2][x][y] = randomInt( Math.min(D + 1, Math.min(limitF[T / 2][x][y], limitB[T / 2][x][y])) ) / D;
+            if(A.get(x, y) === 0) {
+                maze[T / 2][x][y] = 0;
+            } else {
+                maze[T / 2][x][y] = randomInt( Math.min(D + 1, Math.min(limitF[T / 2][x][y], limitB[T / 2][x][y])) ) / D;
+            }
 
             var possible_growth = [];
 
